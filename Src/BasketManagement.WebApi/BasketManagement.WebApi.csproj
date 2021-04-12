@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AccountModule\BasketManagement.AccountModule.Infrastructure\BasketManagement.AccountModule.Infrastructure.csproj"/>
+        <ProjectReference Include="..\OrderModule\BasketManagement.OrderModule.Infrastructure\BasketManagement.OrderModule.Infrastructure.csproj"/>
+        <ProjectReference Include="..\ProductModule\BasketManagement.ProductModule.Infrastructure\BasketManagement.ProductModule.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Shared\BasketManagement.Shared.Infrastructure\BasketManagement.Shared.Infrastructure.csproj"/>
+        <ProjectReference Include="..\StockModule\BasketManagement.StockModule.Infrastructure\BasketManagement.StockModule.Infrastructure.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="appsettings.dev.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="appsettings.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

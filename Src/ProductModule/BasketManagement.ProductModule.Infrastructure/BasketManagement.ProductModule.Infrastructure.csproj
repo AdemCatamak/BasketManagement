@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\BasketManagement.Shared.Infrastructure\BasketManagement.Shared.Infrastructure.csproj" />
+      <ProjectReference Include="..\BasketManagement.ProductModule.Application\BasketManagement.ProductModule.Application.csproj" />
+      <ProjectReference Include="..\BasketManagement.ProductModule.Domain\BasketManagement.ProductModule.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

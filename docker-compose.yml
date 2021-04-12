@@ -1,0 +1,31 @@
+version: "3.4"
+
+services:
+
+  basketmanagement-app:
+    image: basketmanagementm:latest
+    build:
+      context: ./
+      dockerfile: docker-basketmanagement.Dockerfile
+    ports:
+      - 5000:80
+    depends_on:
+      - basketmanagement-sql-server
+      - basketmanagement-rabbit-mq
+    links:
+      - basketmanagement-sql-server
+      - basketmanagement-rabbit-mq
+
+  basketmanagement-sql-server:
+    image: mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Passw0rd"
+    expose:
+      - 1433  
+
+  basketmanagement-rabbit-mq:
+    image: rabbitmq:3.7.21
+    expose:
+      - 5672
+  

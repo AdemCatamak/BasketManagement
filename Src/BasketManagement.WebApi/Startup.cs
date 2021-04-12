@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using BasketManagement.AccountModule.Application.Services;
+using BasketManagement.AccountModule.Infrastructure;
+using BasketManagement.OrderModule.Infrastructure;
+using BasketManagement.ProductModule.Infrastructure;
+using BasketManagement.Shared.Infrastructure;
+using BasketManagement.Shared.Infrastructure.MassTransitComponents;
+using BasketManagement.StockModule.Infrastructure;
+using BasketManagement.WebApi.Middleware;
+using BasketManagement.WebApi.Modules;
+
+namespace BasketManagement.WebApi
+{
+    public class Startup
+    {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers()
+                    .AddNewtonsoftJson(options =>
+                                       {
+                                           options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                                           options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                                           options.SerializerSettings.StringEscapeHandling = StringEscapeHandling.Default;
+                                           options.SerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+                                           options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                                           options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                                           options.SerializerSettings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
+                                           options.SerializerSettings.TypeNameHandling = TypeNameHandling.None;
+                                       })
+                    .AddApplicationPart(typeof(HomeController).Assembly);
+
+            services.AddSwaggerGen(c =>
+                                   {
+                                       c.SwaggerDoc("v1", new OpenApiInfo());
+
+                                       c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                                                                         {
+                                                                             Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                                                                             Name = "Authorization",
+                                                                             In = ParameterLocation.Header,
+                                                                             Type = SecuritySchemeType.ApiKey
+                                                                         });
+                                       c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                                                                {
+                                                                    {
+                                                                        new OpenApiSecurityScheme
+                                                                        {
+                                                                            Reference = new OpenApiReference
+                                                                                        {
+                                                                                            Type = ReferenceType.SecurityScheme,
+                                                                                            Id = "Bearer"
+                                                                                        },
+                                                                        },
+                                                                        new List<string>()
+                                                                    }
+                                                                });
+
+                                       c.CustomSchemaIds(type => type.ToString());
+                                       var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                                       var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                                       c.IncludeXmlComments(xmlPath);
+                                   });
+
+            #region Auth
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+                                  options =>
+                                  {
+                                      options.RequireHttpsMetadata = false;
+                                      options.SaveToken = true;
+                                      options.TokenValidationParameters = new TokenValidationParameters
+                                                                          {
+                                                                              ValidateIssuer = true,
+                                                                              ValidateAudience = true,
+                                                                              ValidateLifetime = true,
+                                                                              ValidateIssuerSigningKey = true,
+                                                                              ValidIssuer = JwtAccessTokenGenerator.JWT_ISSUER,
+                                                                              ValidAudience = JwtAccessTokenGenerator.JWT_AUDIENCE,
+                                                                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtAccessTokenGenerator.JWT_KEY))
+                                                                          };
+                                  });
+
+            #endregion
+
+            services.AddSingleton<IIntegrationMessageConsumerAssembly, MassTransitConsumerAssembly>();
+            CompositionRootRegisterer compositionRootRegisterer = new CompositionRootRegisterer(services, _configuration);
+            compositionRootRegisterer.Registerer(new SharedCompositionRoot())
+                                     .Registerer(new AccountModuleCompositionRoot())
+                                     .Registerer(new ProductModuleCompositionRoot())
+                                     .Registerer(new StockModuleCompositionRoot())
+                                     .Registerer(new OrderModuleCompositionRoot())
+                ;
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseMiddleware<GeneralExceptionHandlerMiddleware>();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", ""); });
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(builder => builder.MapControllers());
+        }
+    }
+}
