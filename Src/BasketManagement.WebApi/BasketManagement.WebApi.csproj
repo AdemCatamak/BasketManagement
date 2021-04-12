@@ -7,14 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AccountModule\BasketManagement.AccountModule.Infrastructure\BasketManagement.AccountModule.Infrastructure.csproj" />
-        <ProjectReference Include="..\BasketModule\BasketManagement.BasketModule.Application\BasketManagement.BasketModule.Application.csproj" />
-        <ProjectReference Include="..\BasketModule\BasketManagement.BasketModule.Domain\BasketManagement.BasketModule.Domain.csproj" />
-        <ProjectReference Include="..\BasketModule\BasketManagement.BasketModule.Infrastructure\BasketManagement.BasketModule.Infrastructure.csproj" />
-        <ProjectReference Include="..\OrderModule\BasketManagement.BasketModule.Infrastructure\BasketManagement.BasketModule.Infrastructure.csproj" />
-        <ProjectReference Include="..\ProductModule\BasketManagement.ProductModule.Infrastructure\BasketManagement.ProductModule.Infrastructure.csproj" />
-        <ProjectReference Include="..\Shared\BasketManagement.Shared.Infrastructure\BasketManagement.Shared.Infrastructure.csproj" />
-        <ProjectReference Include="..\StockModule\BasketManagement.StockModule.Infrastructure\BasketManagement.StockModule.Infrastructure.csproj" />
+      <ProjectReference Include="..\BasketModule\BasketManagement.BasketModule.Infrastructure\BasketManagement.BasketModule.Infrastructure.csproj" />
+      <ProjectReference Include="..\StockModule\BasketManagement.StockModule.Infrastructure\BasketManagement.StockModule.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

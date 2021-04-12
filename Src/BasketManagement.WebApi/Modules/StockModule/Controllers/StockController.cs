@@ -10,7 +10,6 @@ using BasketManagement.WebApi.Modules.StockModule.Controllers.Requests;
 
 namespace BasketManagement.WebApi.Modules.StockModule.Controllers
 {
-    [Authorize]
     [Route("stocks")]
     public class StockController : ControllerBase
     {

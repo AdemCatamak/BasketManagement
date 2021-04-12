@@ -7,7 +7,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\BasketManagement.Shared.Infrastructure\BasketManagement.Shared.Infrastructure.csproj" />
       <ProjectReference Include="..\BasketManagement.StockModule.Application\BasketManagement.StockModule.Application.csproj" />
-      <ProjectReference Include="..\BasketManagement.StockModule.Domain\BasketManagement.StockModule.Domain.csproj" />
     </ItemGroup>
 
 </Project>

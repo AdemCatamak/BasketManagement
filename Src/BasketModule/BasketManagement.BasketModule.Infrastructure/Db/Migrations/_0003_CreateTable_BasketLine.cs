@@ -8,10 +8,12 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.Migrations
         public override void Up()
         {
             Create.Table("BasketLines").InSchema("dbo.Basket")
-                  .WithColumn("Id").AsGuid().PrimaryKey()
-                  .WithColumn("BasketId").AsGuid().NotNullable().ForeignKey("FK__BasketLine_BasketId__Basket_Id", "dbo.Basket", "Baskets", "Id")
-                  .WithColumn("ProductId").AsString().NotNullable()
-                  .WithColumn("Quantity").AsInt32().NotNullable()
+                .WithColumn("Id").AsGuid().PrimaryKey()
+                .WithColumn("BasketId").AsGuid().NotNullable().ForeignKey("FK__BasketLine_BasketId__Basket_Id", "dbo.Basket", "Baskets", "Id")
+                .WithColumn("ProductId").AsString().NotNullable()
+                .WithColumn("Quantity").AsInt32().NotNullable()
+                .WithColumn("UpdatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
+                .WithColumn("CreatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
                 ;
         }
 

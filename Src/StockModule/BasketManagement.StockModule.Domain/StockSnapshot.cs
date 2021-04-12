@@ -54,7 +54,7 @@ namespace BasketManagement.StockModule.Domain
             LastStockActionDate = lastStockActionDate;
             UpdatedOn = DateTime.UtcNow;
 
-            if (AvailableStock < 0) throw new InsufficientStockException(AvailableStock, count);
+            if (AvailableStock < 0) throw new InsufficientStockException(-AvailableStock, count);
 
             AvailableStockCountChangedEvent availableStockCountChangedEvent = new AvailableStockCountChangedEvent(this);
             AddDomainEvent(availableStockCountChangedEvent);

@@ -4,8 +4,8 @@ namespace BasketManagement.StockModule.Domain.Exceptions
 {
     public class InsufficientStockException : ValidationException
     {
-        public InsufficientStockException(int availableStock, int count)
-            : base($"There is {availableStock} item in stock. You demand {count}")
+        public InsufficientStockException(int insufficientItemQuantity, int count)
+            : base($"There is {count - insufficientItemQuantity} item in stock. You demand {count}")
         {
         }
     }

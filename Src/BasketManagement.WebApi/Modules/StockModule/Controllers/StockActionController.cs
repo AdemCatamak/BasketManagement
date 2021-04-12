@@ -11,6 +11,7 @@ namespace BasketManagement.WebApi.Modules.StockModule.Controllers
 {
     [Route("stock-actions")]
     [Authorize(Roles = "Admin")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class StockActionController : ControllerBase
     {
         private readonly IExecutionContext _executionContext;

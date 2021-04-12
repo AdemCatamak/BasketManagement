@@ -6,7 +6,7 @@ namespace BasketManagement.BasketModule.Application.Services
     {
         public string Generate(BasketLine basketLine)
         {
-            return $"{basketLine.Id}--{basketLine.BasketItem.ProductId}";
+            return $"{basketLine.BasketId}--{basketLine.Id}--{basketLine.UpdatedOn}";
         }
     }
 }

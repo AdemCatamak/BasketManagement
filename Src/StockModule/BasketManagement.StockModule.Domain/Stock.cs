@@ -37,7 +37,7 @@ namespace BasketManagement.StockModule.Domain
 
         public static Stock Create(string productId, int availableStock, Guid stockActionId, DateTime lastStockOperationDate, IStockUniqueChecker stockUniqueChecker, CancellationToken cancellationToken)
         {
-            var unique = stockUniqueChecker.CheckAsync(productId, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            bool unique = stockUniqueChecker.CheckAsync(productId, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
             if (!unique) throw new StockAlreadyExistException(productId);
 
             Stock stock = new Stock(productId, availableStock, stockActionId, lastStockOperationDate);
