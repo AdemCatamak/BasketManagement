@@ -1,8 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using BasketManagement.BasketModule.Infrastructure;
+using BasketManagement.Shared.Infrastructure;
+using BasketManagement.Shared.Infrastructure.MassTransitComponents;
+using BasketManagement.StockModule.Infrastructure;
+using BasketManagement.WebApi.Middleware;
+using BasketManagement.WebApi.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using BasketManagement.Shared.Infrastructure;
-using BasketManagement.Shared.Infrastructure.MassTransitComponents;
-using BasketManagement.StockModule.Infrastructure;
-using BasketManagement.WebApi.Middleware;
-using BasketManagement.WebApi.Modules;
 
 namespace BasketManagement.WebApi
 {
@@ -46,28 +45,6 @@ namespace BasketManagement.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo());
-
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                        },
-                        new List<string>()
-                    }
-                });
 
                 c.CustomSchemaIds(type => type.ToString());
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
