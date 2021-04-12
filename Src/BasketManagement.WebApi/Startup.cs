@@ -2,20 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using BasketManagement.BasketModule.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using BasketManagement.AccountModule.Application.Services;
-using BasketManagement.AccountModule.Infrastructure;
-using BasketManagement.OrderModule.Infrastructure;
-using BasketManagement.ProductModule.Infrastructure;
 using BasketManagement.Shared.Infrastructure;
 using BasketManagement.Shared.Infrastructure.MassTransitComponents;
 using BasketManagement.StockModule.Infrastructure;
@@ -36,80 +30,56 @@ namespace BasketManagement.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                    .AddNewtonsoftJson(options =>
-                                       {
-                                           options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                                           options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-                                           options.SerializerSettings.StringEscapeHandling = StringEscapeHandling.Default;
-                                           options.SerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
-                                           options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                                           options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                                           options.SerializerSettings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
-                                           options.SerializerSettings.TypeNameHandling = TypeNameHandling.None;
-                                       })
-                    .AddApplicationPart(typeof(HomeController).Assembly);
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                    options.SerializerSettings.StringEscapeHandling = StringEscapeHandling.Default;
+                    options.SerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    options.SerializerSettings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
+                    options.SerializerSettings.TypeNameHandling = TypeNameHandling.None;
+                })
+                .AddApplicationPart(typeof(HomeController).Assembly);
 
             services.AddSwaggerGen(c =>
-                                   {
-                                       c.SwaggerDoc("v1", new OpenApiInfo());
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo());
 
-                                       c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                                                                         {
-                                                                             Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                                                                             Name = "Authorization",
-                                                                             In = ParameterLocation.Header,
-                                                                             Type = SecuritySchemeType.ApiKey
-                                                                         });
-                                       c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                                                                {
-                                                                    {
-                                                                        new OpenApiSecurityScheme
-                                                                        {
-                                                                            Reference = new OpenApiReference
-                                                                                        {
-                                                                                            Type = ReferenceType.SecurityScheme,
-                                                                                            Id = "Bearer"
-                                                                                        },
-                                                                        },
-                                                                        new List<string>()
-                                                                    }
-                                                                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                        },
+                        new List<string>()
+                    }
+                });
 
-                                       c.CustomSchemaIds(type => type.ToString());
-                                       var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                                       var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                                       c.IncludeXmlComments(xmlPath);
-                                   });
-
-            #region Auth
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
-                                  options =>
-                                  {
-                                      options.RequireHttpsMetadata = false;
-                                      options.SaveToken = true;
-                                      options.TokenValidationParameters = new TokenValidationParameters
-                                                                          {
-                                                                              ValidateIssuer = true,
-                                                                              ValidateAudience = true,
-                                                                              ValidateLifetime = true,
-                                                                              ValidateIssuerSigningKey = true,
-                                                                              ValidIssuer = JwtAccessTokenGenerator.JWT_ISSUER,
-                                                                              ValidAudience = JwtAccessTokenGenerator.JWT_AUDIENCE,
-                                                                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtAccessTokenGenerator.JWT_KEY))
-                                                                          };
-                                  });
-
-            #endregion
+                c.CustomSchemaIds(type => type.ToString());
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddSingleton<IIntegrationMessageConsumerAssembly, MassTransitConsumerAssembly>();
             CompositionRootRegisterer compositionRootRegisterer = new CompositionRootRegisterer(services, _configuration);
             compositionRootRegisterer.Registerer(new SharedCompositionRoot())
-                                     .Registerer(new AccountModuleCompositionRoot())
-                                     .Registerer(new ProductModuleCompositionRoot())
-                                     .Registerer(new StockModuleCompositionRoot())
-                                     .Registerer(new OrderModuleCompositionRoot())
+                .Registerer(new StockModuleCompositionRoot())
+                .Registerer(new BasketModuleCompositionRoot())
                 ;
         }
 
