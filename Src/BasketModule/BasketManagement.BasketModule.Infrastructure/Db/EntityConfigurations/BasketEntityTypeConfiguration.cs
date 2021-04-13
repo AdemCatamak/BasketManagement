@@ -33,6 +33,8 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
             builder.Metadata
                    .FindNavigation(nameof(Basket.BasketLines))
                    .SetPropertyAccessMode(PropertyAccessMode.Field);
+            
+            builder.HasQueryFilter(m => m.IsDeleted == false);
         }
     }
 }

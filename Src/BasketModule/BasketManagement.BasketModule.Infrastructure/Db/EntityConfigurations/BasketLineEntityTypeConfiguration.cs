@@ -33,6 +33,8 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
             builder.Property(m => m.RowVersion)
                 .HasColumnName("RowVersion")
                 .IsRowVersion();
+
+            builder.HasQueryFilter(m => m.IsDeleted == false);
         }
     }
 }
