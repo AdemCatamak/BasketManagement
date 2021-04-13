@@ -7,6 +7,8 @@ using BasketManagement.BasketModule.Domain.Repositories;
 using BasketManagement.BasketModule.Domain.Specifications;
 using BasketManagement.Shared.Domain.DomainMessageBroker;
 using BasketManagement.Shared.Domain.Pagination;
+using BasketManagement.Shared.Specification.ExpressionSpecificationSection.SpecificationOperations;
+using BasketManagement.Shared.Specification.ExpressionSpecificationSection.Specifications;
 
 namespace BasketManagement.BasketModule.Application.CommandHandlers
 {
@@ -21,14 +23,18 @@ namespace BasketManagement.BasketModule.Application.CommandHandlers
 
         public async Task<PaginatedCollection<BasketResponse>> Handle(QueryBasketCommand request, CancellationToken cancellationToken)
         {
-            var specification = new AccountIdIs(request.AccountId);
+            IExpressionSpecification<Basket> specification = new AccountIdIs(request.AccountId);
+            if (request.BasketId != null)
+            {
+                specification = specification.And(new BasketIdIs(request.BasketId));
+            }
 
             IBasketRepository basketRepository = _basketDbContext.BasketRepository;
-            PaginatedCollection<Basket> order = await basketRepository.GetAsync(specification, request.Offset, request.Limit, cancellationToken);
+            PaginatedCollection<Basket> baskets = await basketRepository.GetAsync(specification, request.Offset, request.Limit, cancellationToken);
 
-            PaginatedCollection<BasketResponse> result = new PaginatedCollection<BasketResponse>(order.TotalCount,
-                                                                                               order.Data
-                                                                                                    .Select(x => new BasketResponse(x.Id, x.BasketStatus, x.BasketLines.Select(line => line.BasketItem).ToList())));
+            PaginatedCollection<BasketResponse> result = new PaginatedCollection<BasketResponse>(baskets.TotalCount,
+                baskets.Data
+                    .Select(x => new BasketResponse(x.Id, x.BasketLines.Select(line => line.BasketItem).ToList())));
 
             return result;
         }

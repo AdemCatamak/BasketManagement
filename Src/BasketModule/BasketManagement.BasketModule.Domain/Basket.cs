@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BasketManagement.BasketModule.Domain.Events;
 using BasketManagement.BasketModule.Domain.Exceptions;
-using BasketManagement.BasketModule.Domain.Services;
 using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain;
 
@@ -13,7 +12,6 @@ namespace BasketManagement.BasketModule.Domain
     {
         public BasketId Id { get; private set; }
         public string AccountId { get; private set; }
-        public BasketStatuses BasketStatus { get; private set; }
         public DateTime UpdatedOn { get; private set; }
         public DateTime CreatedOn { get; private set; }
 
@@ -22,15 +20,14 @@ namespace BasketManagement.BasketModule.Domain
 
 
         private Basket(string accountId) : this
-            (new BasketId(Guid.NewGuid()), accountId, BasketStatuses.Submitted, DateTime.UtcNow, DateTime.UtcNow)
+            (new BasketId(Guid.NewGuid()), accountId, DateTime.UtcNow, DateTime.UtcNow)
         {
         }
 
-        private Basket(BasketId id, string accountId, BasketStatuses basketStatus, DateTime createdOn, DateTime updatedOn)
+        private Basket(BasketId id, string accountId,  DateTime createdOn, DateTime updatedOn)
         {
             Id = id;
             AccountId = accountId;
-            BasketStatus = basketStatus;
             UpdatedOn = updatedOn;
             CreatedOn = createdOn;
         }
@@ -42,17 +39,6 @@ namespace BasketManagement.BasketModule.Domain
             basket.AddDomainEvent(basketCreatedEvent);
 
             return basket;
-        }
-
-        public void ChangeOrderStatus(IBasketStateMachine basketStateMachine, BasketStatuses targetBasketStatus)
-        {
-            var previousOrderStatus = BasketStatus;
-            basketStateMachine.ChangeBasketStatus(targetBasketStatus);
-            BasketStatus = targetBasketStatus;
-            OrderStatusChangedEvent orderStatusChangedEvent = OrderStatusChangedEvent.Create(previousOrderStatus, this);
-            AddDomainEvent(orderStatusChangedEvent);
-
-            UpdatedOn = UpdatedOn;
         }
 
         public void PutItemIntoBasket(BasketItem basketItem)
@@ -101,13 +87,5 @@ namespace BasketManagement.BasketModule.Domain
             BasketLine basketLine = BasketLine.Create(this, basketItem);
             _basketLines.Add(basketLine);
         }
-    }
-
-    public enum BasketStatuses
-    {
-        Submitted = 1,
-        OrderNotFulfilled = 2,
-        OrderFulfilled = 3,
-        Shipped = 4,
     }
 }

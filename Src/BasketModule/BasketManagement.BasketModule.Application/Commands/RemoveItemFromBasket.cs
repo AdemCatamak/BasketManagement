@@ -1,5 +1,4 @@
-﻿using System;
-using BasketManagement.BasketModule.Domain.ValueObjects;
+﻿using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain.DomainMessageBroker;
 
 namespace BasketManagement.BasketModule.Application.Commands

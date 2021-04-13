@@ -4,7 +4,6 @@ using BasketManagement.BasketModule.Application.Commands;
 using BasketManagement.BasketModule.Domain;
 using BasketManagement.BasketModule.Domain.Repositories;
 using BasketManagement.BasketModule.Domain.Specifications;
-using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain.DomainMessageBroker;
 using BasketManagement.Shared.Specification.ExpressionSpecificationSection.SpecificationOperations;
 using BasketManagement.Shared.Specification.ExpressionSpecificationSection.Specifications;

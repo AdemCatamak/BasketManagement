@@ -39,6 +39,7 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
         {
             var queryBasketCommand = new QueryBasketCommand(accountId)
             {
+                BasketId = getBasketHttpRequest?.BasketId == null ? null : new BasketId(getBasketHttpRequest.BasketId.Value),
                 Offset = getBasketHttpRequest?.Offset ?? 0,
                 Limit = getBasketHttpRequest?.Limit ?? 10
             };
@@ -49,7 +50,6 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
                     .Select(orderResponse => new BasketHttpResponse
                     {
                         BasketId = orderResponse.BasketId.Value.ToString(),
-                        BasketStatus = orderResponse.BasketStatus,
                         BasketItemHttpModels = orderResponse.OrderItems.Select(item => new BasketItemHttpModel
                             {
                                 ProductId = item.ProductId,

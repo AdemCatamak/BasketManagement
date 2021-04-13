@@ -17,8 +17,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
 
             builder.Property(m => m.AccountId)
                    .HasColumnName("AccountId");
-            builder.Property(m => m.BasketStatus)
-                   .HasColumnName("BasketStatus");
             builder.Property(m => m.CreatedOn)
                    .HasColumnName("CreatedOn");
             builder.Property(m => m.UpdatedOn)

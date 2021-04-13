@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using BasketManagement.BasketModule.Domain;
 using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain.IIntegrationMessages;
 

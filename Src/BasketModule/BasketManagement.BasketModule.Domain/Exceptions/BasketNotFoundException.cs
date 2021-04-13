@@ -4,7 +4,7 @@ namespace BasketManagement.BasketModule.Domain.Exceptions
 {
     public class BasketNotFoundException : NotFoundException
     {
-        public BasketNotFoundException() : base("Order could not found")
+        public BasketNotFoundException() : base("Basket could not found")
         {
         }
     }

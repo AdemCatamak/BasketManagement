@@ -54,8 +54,6 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketManagement.BasketModule.Application", "Src\BasketModule\BasketManagement.BasketModule.Application\BasketManagement.BasketModule.Application.csproj", "{ED107661-987D-43CC-AFA1-A532B9097D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketManagement.BasketModule.Contracts", "Src\BasketModule\BasketManagement.BasketModule.Contracts\BasketManagement.BasketModule.Contracts.csproj", "{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketManagement.BasketModule.Domain", "Src\BasketModule\BasketManagement.BasketModule.Domain\BasketManagement.BasketModule.Domain.csproj", "{0025EB53-E892-4853-BFC3-F4E00ED50576}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketManagement.BasketModule.Infrastructure", "Src\BasketModule\BasketManagement.BasketModule.Infrastructure\BasketManagement.BasketModule.Infrastructure.csproj", "{4015DBBA-113B-42AF-A908-D8E24B53D2F0}"
@@ -78,7 +76,6 @@ Global
 		{E19343C8-5E9D-4563-B402-DCC903C9FC19} = {B580F95B-01A3-4E5E-9214-19726AE0446F}
 		{3CFE9969-5034-42F2-8362-CA6F8DFE4AFF} = {04322903-EC5F-4595-966E-BEE959D90CE2}
 		{ED107661-987D-43CC-AFA1-A532B9097D4C} = {3CFE9969-5034-42F2-8362-CA6F8DFE4AFF}
-		{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA} = {3CFE9969-5034-42F2-8362-CA6F8DFE4AFF}
 		{0025EB53-E892-4853-BFC3-F4E00ED50576} = {3CFE9969-5034-42F2-8362-CA6F8DFE4AFF}
 		{4015DBBA-113B-42AF-A908-D8E24B53D2F0} = {3CFE9969-5034-42F2-8362-CA6F8DFE4AFF}
 	EndGlobalSection
@@ -119,10 +116,6 @@ Global
 		{ED107661-987D-43CC-AFA1-A532B9097D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED107661-987D-43CC-AFA1-A532B9097D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED107661-987D-43CC-AFA1-A532B9097D4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E77A77AA-5C4E-4176-9CAA-BD263C9D95CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0025EB53-E892-4853-BFC3-F4E00ED50576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0025EB53-E892-4853-BFC3-F4E00ED50576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0025EB53-E892-4853-BFC3-F4E00ED50576}.Release|Any CPU.ActiveCfg = Release|Any CPU
