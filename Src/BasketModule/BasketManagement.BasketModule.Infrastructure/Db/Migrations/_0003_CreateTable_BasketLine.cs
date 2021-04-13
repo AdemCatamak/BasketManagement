@@ -14,7 +14,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.Migrations
                 .WithColumn("Quantity").AsInt32().NotNullable()
                 .WithColumn("UpdatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
                 .WithColumn("CreatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
-                .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("RowVersion").AsCustom("rowversion")
                 ;
         }

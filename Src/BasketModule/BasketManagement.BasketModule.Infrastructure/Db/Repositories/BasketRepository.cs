@@ -58,5 +58,12 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.Repositories
             var paginatedCollection = new PaginatedCollection<Basket>(totalCount, basketList);
             return paginatedCollection;
         }
+
+        public Task RemoveAsync(Basket basket, CancellationToken cancellationToken)
+        {
+            basket.RemoveAllItemFromBasket();
+            _appDbContext.Remove(basket);
+            return Task.CompletedTask;
+        }
     }
 }

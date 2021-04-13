@@ -23,8 +23,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
                    .HasColumnName("CreatedOn");
             builder.Property(m => m.UpdatedOn)
                    .HasColumnName("UpdatedOn");
-            builder.Property(m => m.IsDeleted)
-                   .HasColumnName("IsDeleted");
 
             builder.HasMany(x => x.BasketLines)
                    .WithOne(line => line.Basket)
@@ -33,8 +31,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
             builder.Metadata
                    .FindNavigation(nameof(Basket.BasketLines))
                    .SetPropertyAccessMode(PropertyAccessMode.Field);
-            
-            builder.HasQueryFilter(m => m.IsDeleted == false);
         }
     }
 }

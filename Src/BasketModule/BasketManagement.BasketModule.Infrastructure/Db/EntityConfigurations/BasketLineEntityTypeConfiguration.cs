@@ -27,14 +27,9 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
             builder.Property(m => m.UpdatedOn)
                 .HasColumnName("UpdatedOn");
 
-            builder.Property(m => m.IsDeleted)
-                .HasColumnName("IsDeleted");
-
             builder.Property(m => m.RowVersion)
                 .HasColumnName("RowVersion")
                 .IsRowVersion();
-
-            builder.HasQueryFilter(m => m.IsDeleted == false);
         }
     }
 }

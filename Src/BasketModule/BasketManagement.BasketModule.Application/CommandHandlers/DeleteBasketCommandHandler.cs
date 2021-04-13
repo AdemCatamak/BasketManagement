@@ -26,9 +26,8 @@ namespace BasketManagement.BasketModule.Application.CommandHandlers
 
             var basketRepository = _basketDbContext.BasketRepository;
             var basket = await basketRepository.GetFirstAsync(specification, cancellationToken);
+            await basketRepository.RemoveAsync(basket, cancellationToken);
 
-            basket.Remove();
-            
             return true;
         }
     }

@@ -13,7 +13,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.Migrations
                 .WithColumn("BasketStatus").AsInt32().NotNullable()
                 .WithColumn("CreatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
                 .WithColumn("UpdatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
-                .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(false)
                 ;
         }
 

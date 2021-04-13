@@ -16,25 +16,22 @@ namespace BasketManagement.BasketModule.Domain
         public DateTime UpdatedOn { get; private set; }
         public DateTime CreatedOn { get; private set; }
 
-        public bool IsDeleted { get; private set; }
-
         private readonly List<BasketLine> _basketLines = new List<BasketLine>();
         public IReadOnlyCollection<BasketLine> BasketLines => _basketLines;
 
 
         private Basket(string accountId) : this
-            (new BasketId(Guid.NewGuid()), accountId, BasketStatuses.Submitted, DateTime.UtcNow, DateTime.UtcNow, false)
+            (new BasketId(Guid.NewGuid()), accountId, BasketStatuses.Submitted, DateTime.UtcNow, DateTime.UtcNow)
         {
         }
 
-        private Basket(BasketId id, string accountId, BasketStatuses basketStatus, DateTime createdOn, DateTime updatedOn, bool isDeleted)
+        private Basket(BasketId id, string accountId, BasketStatuses basketStatus, DateTime createdOn, DateTime updatedOn)
         {
             Id = id;
             AccountId = accountId;
             BasketStatus = basketStatus;
             UpdatedOn = updatedOn;
             CreatedOn = createdOn;
-            IsDeleted = isDeleted;
         }
 
         public static Basket Create(string accountId)
@@ -73,14 +70,14 @@ namespace BasketManagement.BasketModule.Domain
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void Remove()
+        public void RemoveAllItemFromBasket()
         {
             foreach (var basketLine in _basketLines)
             {
                 basketLine.Remove();
+                _basketLines.Remove(basketLine);
             }
 
-            IsDeleted = true;
             UpdatedOn = DateTime.UtcNow;
         }
     }

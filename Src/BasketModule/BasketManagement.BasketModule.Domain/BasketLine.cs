@@ -14,7 +14,6 @@ namespace BasketManagement.BasketModule.Domain
         public BasketItem BasketItem { get; private set; } = null!;
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedOn { get; private set; } = DateTime.UtcNow;
-        public bool IsDeleted { get; private set; } = false;
         public byte[] RowVersion { get; private set; }
 
         private BasketLine()
@@ -23,11 +22,11 @@ namespace BasketManagement.BasketModule.Domain
         }
 
         private BasketLine(Basket basket, BasketItem basketItem)
-            : this(new BasketLineId(Guid.NewGuid()), basket, basketItem, DateTime.UtcNow, DateTime.UtcNow, false)
+            : this(new BasketLineId(Guid.NewGuid()), basket, basketItem, DateTime.UtcNow, DateTime.UtcNow)
         {
         }
 
-        private BasketLine(BasketLineId id, Basket basket, BasketItem basketItem, DateTime updatedOn, DateTime createdOn, bool isDeleted)
+        private BasketLine(BasketLineId id, Basket basket, BasketItem basketItem, DateTime updatedOn, DateTime createdOn)
         {
             Id = id;
             BasketId = basket.Id;
@@ -35,7 +34,6 @@ namespace BasketManagement.BasketModule.Domain
             BasketItem = basketItem;
             UpdatedOn = updatedOn;
             CreatedOn = createdOn;
-            IsDeleted = isDeleted;
         }
 
         public static BasketLine Create(Basket basket, BasketItem basketItem)
@@ -69,23 +67,12 @@ namespace BasketManagement.BasketModule.Domain
                 AddDomainEvent(basketLineQuantityIncreasedEvent);
             }
 
-            if (quantity == 0)
-            {
-                SetRemoved();
-            }
-            
             UpdatedOn = DateTime.UtcNow;
         }
 
         public void Remove()
         {
             UpdateQuantity(0);
-        }
-
-        private void SetRemoved()
-        {
-            IsDeleted = true;
-            UpdatedOn = DateTime.UtcNow;
         }
     }
 }
