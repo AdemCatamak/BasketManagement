@@ -21,6 +21,10 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
                    .HasColumnName("BasketStatus");
             builder.Property(m => m.CreatedOn)
                    .HasColumnName("CreatedOn");
+            builder.Property(m => m.UpdatedOn)
+                   .HasColumnName("UpdatedOn");
+            builder.Property(m => m.IsDeleted)
+                   .HasColumnName("IsDeleted");
 
             builder.HasMany(x => x.BasketLines)
                    .WithOne(line => line.Basket)

@@ -14,6 +14,8 @@ namespace BasketManagement.BasketModule.Domain
         public BasketItem BasketItem { get; private set; } = null!;
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedOn { get; private set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; private set; } = false;
+        public byte[] RowVersion { get; private set; }
 
         private BasketLine()
         {
@@ -21,11 +23,11 @@ namespace BasketManagement.BasketModule.Domain
         }
 
         private BasketLine(Basket basket, BasketItem basketItem)
-            : this(new BasketLineId(Guid.NewGuid()), basket, basketItem, DateTime.UtcNow, DateTime.UtcNow)
+            : this(new BasketLineId(Guid.NewGuid()), basket, basketItem, DateTime.UtcNow, DateTime.UtcNow, false)
         {
         }
 
-        private BasketLine(BasketLineId id, Basket basket, BasketItem basketItem, DateTime updatedOn, DateTime createdOn)
+        private BasketLine(BasketLineId id, Basket basket, BasketItem basketItem, DateTime updatedOn, DateTime createdOn, bool isDeleted)
         {
             Id = id;
             BasketId = basket.Id;
@@ -33,6 +35,7 @@ namespace BasketManagement.BasketModule.Domain
             BasketItem = basketItem;
             UpdatedOn = updatedOn;
             CreatedOn = createdOn;
+            IsDeleted = isDeleted;
         }
 
         public static BasketLine Create(Basket basket, BasketItem basketItem)
@@ -50,6 +53,7 @@ namespace BasketManagement.BasketModule.Domain
             {
                 throw new NegativeQuantityException();
             }
+
             UpdatedOn = DateTime.UtcNow;
             int oldQuantity = BasketItem.Quantity;
             BasketItem = new BasketItem(BasketItem.ProductId, quantity);
@@ -64,6 +68,24 @@ namespace BasketManagement.BasketModule.Domain
                 BasketLineQuantityIncreasedEvent basketLineQuantityIncreasedEvent = new BasketLineQuantityIncreasedEvent(oldQuantity, this);
                 AddDomainEvent(basketLineQuantityIncreasedEvent);
             }
+
+            if (quantity == 0)
+            {
+                SetRemoved();
+            }
+            
+            UpdatedOn = DateTime.UtcNow;
+        }
+
+        public void Remove()
+        {
+            UpdateQuantity(0);
+        }
+
+        private void SetRemoved()
+        {
+            IsDeleted = true;
+            UpdatedOn = DateTime.UtcNow;
         }
     }
 }

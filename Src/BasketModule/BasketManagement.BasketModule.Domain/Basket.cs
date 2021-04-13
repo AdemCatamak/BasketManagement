@@ -13,23 +13,28 @@ namespace BasketManagement.BasketModule.Domain
         public BasketId Id { get; private set; }
         public string AccountId { get; private set; }
         public BasketStatuses BasketStatus { get; private set; }
+        public DateTime UpdatedOn { get; private set; }
         public DateTime CreatedOn { get; private set; }
+
+        public bool IsDeleted { get; private set; }
 
         private readonly List<BasketLine> _basketLines = new List<BasketLine>();
         public IReadOnlyCollection<BasketLine> BasketLines => _basketLines;
 
 
         private Basket(string accountId) : this
-            (new BasketId(Guid.NewGuid()), accountId, BasketStatuses.Submitted, DateTime.UtcNow)
+            (new BasketId(Guid.NewGuid()), accountId, BasketStatuses.Submitted, DateTime.UtcNow, DateTime.UtcNow, false)
         {
         }
 
-        private Basket(BasketId id, string accountId, BasketStatuses basketStatus, DateTime createdOn)
+        private Basket(BasketId id, string accountId, BasketStatuses basketStatus, DateTime createdOn, DateTime updatedOn, bool isDeleted)
         {
             Id = id;
             AccountId = accountId;
             BasketStatus = basketStatus;
+            UpdatedOn = updatedOn;
             CreatedOn = createdOn;
+            IsDeleted = isDeleted;
         }
 
         public static Basket Create(string accountId)
@@ -48,6 +53,8 @@ namespace BasketManagement.BasketModule.Domain
             BasketStatus = targetBasketStatus;
             OrderStatusChangedEvent orderStatusChangedEvent = OrderStatusChangedEvent.Create(previousOrderStatus, this);
             AddDomainEvent(orderStatusChangedEvent);
+
+            UpdatedOn = UpdatedOn;
         }
 
         public void PutItemIntoBasket(BasketItem basketItem)
@@ -62,6 +69,19 @@ namespace BasketManagement.BasketModule.Domain
                 BasketLine basketLine = BasketLine.Create(this, basketItem);
                 _basketLines.Add(basketLine);
             }
+            
+            UpdatedOn = DateTime.UtcNow;
+        }
+
+        public void Remove()
+        {
+            foreach (var basketLine in _basketLines)
+            {
+                basketLine.Remove();
+            }
+
+            IsDeleted = true;
+            UpdatedOn = DateTime.UtcNow;
         }
     }
 

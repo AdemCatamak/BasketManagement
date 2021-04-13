@@ -12,17 +12,27 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
             builder.ToTable("BasketLines", "dbo.Basket");
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id)
-                   .HasColumnName("Id")
-                   .HasConversion(id => id.Value,
-                                  guid => new BasketLineId(guid));
+                .HasColumnName("Id")
+                .HasConversion(id => id.Value,
+                    guid => new BasketLineId(guid));
 
             builder.OwnsOne(m => m.BasketItem)
-                   .Property(item => item.ProductId)
-                   .HasColumnName("ProductId");
+                .Property(item => item.ProductId)
+                .HasColumnName("ProductId");
 
             builder.OwnsOne(m => m.BasketItem)
-                   .Property(item => item.Quantity)
-                   .HasColumnName("Quantity");
+                .Property(item => item.Quantity)
+                .HasColumnName("Quantity");
+
+            builder.Property(m => m.UpdatedOn)
+                .HasColumnName("UpdatedOn");
+
+            builder.Property(m => m.IsDeleted)
+                .HasColumnName("IsDeleted");
+
+            builder.Property(m => m.RowVersion)
+                .HasColumnName("RowVersion")
+                .IsRowVersion();
         }
     }
 }

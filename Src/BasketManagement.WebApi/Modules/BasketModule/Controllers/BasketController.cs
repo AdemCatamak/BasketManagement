@@ -33,18 +33,6 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
             return StatusCode((int) HttpStatusCode.Created, basketId.Value);
         }
 
-        [HttpPut("accounts/{accountId}/baskets/{basketId}")]
-        [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
-        public async Task<IActionResult> PutItemIntoBasket([FromRoute] string accountId, [FromRoute] Guid basketId, [FromBody] BasketItemHttpModel basketItemHttpModel)
-        {
-            BasketItem basketItem = new BasketItem(basketItemHttpModel?.ProductId ?? string.Empty, basketItemHttpModel?.Quantity ?? 0);
-            PutItemIntoBasketCommand putItemIntoBasketCommand = new PutItemIntoBasketCommand(accountId, new BasketId(basketId), basketItem);
-
-            await _executionContext.ExecuteAsync(putItemIntoBasketCommand, CancellationToken.None);
-
-            return StatusCode((int) HttpStatusCode.OK);
-        }
-
         [HttpGet("accounts/{accountId}/baskets")]
         [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetBaskets([FromRoute] string accountId, [FromQuery] GetBasketHttpRequest? getBasketHttpRequest)
@@ -54,7 +42,7 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
                 Offset = getBasketHttpRequest?.Offset ?? 0,
                 Limit = getBasketHttpRequest?.Limit ?? 10
             };
-            
+
             PaginatedCollection<BasketResponse> paginatedCollection = await _executionContext.ExecuteAsync(queryBasketCommand, CancellationToken.None);
             var result = new PaginatedCollection<BasketHttpResponse>(paginatedCollection.TotalCount,
                 paginatedCollection.Data
@@ -71,6 +59,29 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
                     }));
 
             return StatusCode((int) HttpStatusCode.OK, result);
+        }
+
+        [HttpPut("accounts/{accountId}/baskets/{basketId}")]
+        [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> PutItemIntoBasket([FromRoute] string accountId, [FromRoute] Guid basketId, [FromBody] BasketItemHttpModel basketItemHttpModel)
+        {
+            BasketItem basketItem = new BasketItem(basketItemHttpModel?.ProductId ?? string.Empty, basketItemHttpModel?.Quantity ?? 0);
+            PutItemIntoBasketCommand putItemIntoBasketCommand = new PutItemIntoBasketCommand(accountId, new BasketId(basketId), basketItem);
+
+            await _executionContext.ExecuteAsync(putItemIntoBasketCommand, CancellationToken.None);
+
+            return StatusCode((int) HttpStatusCode.OK);
+        }
+
+        [HttpDelete("accounts/{accountId}/baskets/{basketId}")]
+        [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> DeleteBasket([FromRoute] string accountId, [FromRoute] Guid basketId)
+        {
+            var deleteBasketCommand = new DeleteBasketCommand(accountId, new BasketId(basketId));
+
+            await _executionContext.ExecuteAsync(deleteBasketCommand, CancellationToken.None);
+
+            return StatusCode((int) HttpStatusCode.OK);
         }
     }
 }
