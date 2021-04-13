@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BasketManagement.BasketModule.Domain.Events;
+using BasketManagement.BasketModule.Domain.Exceptions;
 using BasketManagement.BasketModule.Domain.Services;
 using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain;
@@ -59,24 +60,43 @@ namespace BasketManagement.BasketModule.Domain
             var existBasketLine = _basketLines.FirstOrDefault(line => line.BasketItem.ProductId == basketItem.ProductId);
             if (existBasketLine != null)
             {
-                existBasketLine.UpdateQuantity(basketItem.Quantity);
+                if (basketItem.Quantity == 0)
+                {
+                    RemoveBasketLine(existBasketLine);
+                }
+                else
+                {
+                    existBasketLine.UpdateQuantity(basketItem.Quantity);
+                }
             }
             else
             {
                 BasketLine basketLine = BasketLine.Create(this, basketItem);
                 _basketLines.Add(basketLine);
             }
-            
+
             UpdatedOn = DateTime.UtcNow;
         }
 
         public void RemoveAllItemFromBasket()
         {
-            foreach (var basketLine in _basketLines)
+            while (_basketLines.Any())
             {
-                basketLine.Remove();
-                _basketLines.Remove(basketLine);
+                RemoveBasketLine(_basketLines.First());
             }
+        }
+
+        public void RemoveItemFromBasket(string productId)
+        {
+            var existBasketLine = _basketLines.FirstOrDefault(line => line.BasketItem.ProductId == productId);
+            if (existBasketLine == null) throw new ItemNotFoundInBasketException(productId);
+            RemoveBasketLine(existBasketLine);
+        }
+
+        private void RemoveBasketLine(BasketLine basketLine)
+        {
+            basketLine.Remove();
+            _basketLines.Remove(basketLine);
 
             UpdatedOn = DateTime.UtcNow;
         }

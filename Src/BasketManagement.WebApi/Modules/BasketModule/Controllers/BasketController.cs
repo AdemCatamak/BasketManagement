@@ -83,5 +83,16 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
 
             return StatusCode((int) HttpStatusCode.OK);
         }
+        
+        [HttpDelete("accounts/{accountId}/baskets/{basketId}/basket-item/{productId}")]
+        [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
+        public async Task<IActionResult> DeleteBasketLine([FromRoute] string accountId, [FromRoute] Guid basketId, [FromRoute] string productId)
+        {
+            var removeItemFromBasket = new RemoveItemFromBasket(accountId, new BasketId(basketId), productId);
+
+            await _executionContext.ExecuteAsync(removeItemFromBasket, CancellationToken.None);
+
+            return StatusCode((int) HttpStatusCode.OK);
+        }
     }
 }
