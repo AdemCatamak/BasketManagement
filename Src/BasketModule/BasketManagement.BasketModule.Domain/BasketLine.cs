@@ -1,5 +1,6 @@
 ﻿using System;
 using BasketManagement.BasketModule.Domain.Events;
+using BasketManagement.BasketModule.Domain.Exceptions;
 using BasketManagement.BasketModule.Domain.ValueObjects;
 using BasketManagement.Shared.Domain;
 
@@ -45,6 +46,10 @@ namespace BasketManagement.BasketModule.Domain
 
         public void UpdateQuantity(int quantity)
         {
+            if (quantity < 0)
+            {
+                throw new NegativeQuantityException();
+            }
             UpdatedOn = DateTime.UtcNow;
             int oldQuantity = BasketItem.Quantity;
             BasketItem = new BasketItem(BasketItem.ProductId, quantity);
