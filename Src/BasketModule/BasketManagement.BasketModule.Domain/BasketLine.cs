@@ -70,7 +70,7 @@ namespace BasketManagement.BasketModule.Domain
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void Remove()
+        public void Discard()
         {
             UpdateQuantity(0);
         }

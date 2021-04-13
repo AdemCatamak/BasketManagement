@@ -60,19 +60,14 @@ namespace BasketManagement.BasketModule.Domain
             var existBasketLine = _basketLines.FirstOrDefault(line => line.BasketItem.ProductId == basketItem.ProductId);
             if (existBasketLine != null)
             {
-                if (basketItem.Quantity == 0)
-                {
-                    RemoveBasketLine(existBasketLine);
-                }
-                else
-                {
+                if (basketItem.Quantity != 0)
                     existBasketLine.UpdateQuantity(basketItem.Quantity);
-                }
+                else
+                    RemoveBasketLine(existBasketLine);
             }
             else
             {
-                BasketLine basketLine = BasketLine.Create(this, basketItem);
-                _basketLines.Add(basketLine);
+                CreateBasketLine(basketItem);
             }
 
             UpdatedOn = DateTime.UtcNow;
@@ -95,10 +90,16 @@ namespace BasketManagement.BasketModule.Domain
 
         private void RemoveBasketLine(BasketLine basketLine)
         {
-            basketLine.Remove();
+            basketLine.Discard();
             _basketLines.Remove(basketLine);
 
             UpdatedOn = DateTime.UtcNow;
+        }
+        
+        private void CreateBasketLine(BasketItem basketItem)
+        {
+            BasketLine basketLine = BasketLine.Create(this, basketItem);
+            _basketLines.Add(basketLine);
         }
     }
 
