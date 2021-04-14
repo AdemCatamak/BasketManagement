@@ -1,15 +1,12 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet publish ./Src/BasketManagement.WebApi/BasketManagement.WebApi.csproj -c Release -r alpine-x64 --self-contained true -o out
+RUN dotnet publish ./Src/BasketManagement.WebApi/BasketManagement.WebApi.csproj -c Release -o out
 
 # Build runtime image
-FROM alpine:3.9.4
-
-# Add some libs required by .NET runtime 
-RUN apk add --no-cache libstdc++ libintl icu
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
 WORKDIR /app
 COPY --from=build-env /app/out .

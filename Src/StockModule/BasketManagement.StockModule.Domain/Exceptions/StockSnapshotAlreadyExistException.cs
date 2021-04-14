@@ -4,7 +4,7 @@ namespace BasketManagement.StockModule.Domain.Exceptions
 {
     public class StockSnapshotAlreadyExistException : ConflictException
     {
-        public StockSnapshotAlreadyExistException(string productId) : base($"Stock snapshot already exist for product : {productId}")
+        public StockSnapshotAlreadyExistException(string productId) : base($"Stock already generated for product : {productId}")
         {
         }
     }

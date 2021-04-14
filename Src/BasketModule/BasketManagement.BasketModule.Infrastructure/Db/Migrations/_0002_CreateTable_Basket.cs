@@ -10,7 +10,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.Migrations
             Create.Table("Baskets").InSchema("dbo.Basket")
                 .WithColumn("Id").AsGuid().PrimaryKey()
                 .WithColumn("AccountId").AsString().NotNullable()
-                .WithColumn("BasketStatus").AsInt32().NotNullable()
                 .WithColumn("CreatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
                 .WithColumn("UpdatedOn").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
                 ;
