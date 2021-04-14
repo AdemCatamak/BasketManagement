@@ -14,7 +14,7 @@ namespace BasketManagement.BasketModule.Domain
         public BasketItem BasketItem { get; private set; } = null!;
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public DateTime UpdatedOn { get; private set; } = DateTime.UtcNow;
-        public byte[] RowVersion { get; private set; }
+        public byte[] RowVersion { get; private set; } = null!;
 
         private BasketLine()
         {

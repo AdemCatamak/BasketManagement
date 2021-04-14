@@ -17,7 +17,7 @@ namespace BasketManagement.StockModule.Domain
         public Guid StockActionId { get; private set; }
         public DateTime LastStockActionDate { get; private set; }
 
-        public byte[] RowVersion { get; private set; }
+        public byte[] RowVersion { get; private set; }= null!;
 
         private Stock(string productId, int availableStock, Guid stockActionId, DateTime lastStockOperationDate)
             : this(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow, productId, availableStock, stockActionId, lastStockOperationDate)
