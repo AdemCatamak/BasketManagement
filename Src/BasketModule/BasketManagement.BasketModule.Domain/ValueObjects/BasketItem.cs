@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BasketManagement.BasketModule.Domain.Exceptions;
 using BasketManagement.Shared.Domain;
 
 namespace BasketManagement.BasketModule.Domain.ValueObjects
@@ -10,6 +11,8 @@ namespace BasketManagement.BasketModule.Domain.ValueObjects
 
         public BasketItem(string productId, int quantity)
         {
+            if (string.IsNullOrEmpty(productId)) throw new ProductIdEmptyException();
+            if (quantity < 0) throw new NegativeQuantityException();
             ProductId = productId;
             Quantity = quantity;
         }

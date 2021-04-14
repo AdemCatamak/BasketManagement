@@ -24,7 +24,7 @@ namespace BasketManagement.BasketModule.Domain
         {
         }
 
-        private Basket(BasketId id, string accountId,  DateTime createdOn, DateTime updatedOn)
+        private Basket(BasketId id, string accountId, DateTime createdOn, DateTime updatedOn)
         {
             Id = id;
             AccountId = accountId;
@@ -34,6 +34,7 @@ namespace BasketManagement.BasketModule.Domain
 
         public static Basket Create(string accountId)
         {
+            if (string.IsNullOrEmpty(accountId)) throw new AccountIdEmptyException();
             Basket basket = new Basket(accountId);
             BasketCreatedEvent basketCreatedEvent = new BasketCreatedEvent(basket);
             basket.AddDomainEvent(basketCreatedEvent);
@@ -53,7 +54,8 @@ namespace BasketManagement.BasketModule.Domain
             }
             else
             {
-                CreateBasketLine(basketItem);
+                if (basketItem.Quantity != 0)
+                    CreateBasketLine(basketItem);
             }
 
             UpdatedOn = DateTime.UtcNow;
@@ -81,7 +83,7 @@ namespace BasketManagement.BasketModule.Domain
 
             UpdatedOn = DateTime.UtcNow;
         }
-        
+
         private void CreateBasketLine(BasketItem basketItem)
         {
             BasketLine basketLine = BasketLine.Create(this, basketItem);
