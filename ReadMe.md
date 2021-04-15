@@ -101,7 +101,19 @@ hata kullanıcıya yansıtılacaktır.
 Kullanıcı için sepete bilgisi aranacaktır. Eğer sepet bilgisi bulunursa bahsi geçen sepetteki tüm ürünler sepetten
 çıkarılacak ardından sepet silinecektir. Sepetin bulunamaması durumda hata kullanıcıya yansıtılacaktır.
 
-## Next Step
+## Test
+
+Projenin tamamı birim veya entegrasyon testi ile test edilmemiştir. Bunun yerine birim testi ve entegrasyon testi
+ihtiyacının nasıl karşılanabileceğine dair örnek teşkil etmesi için domain, application katmanlarının bir kısmını
+kapsayacak şekilde testler yazılmıştır.
+
+DDD konseptine göre domain katmanının dış bağımlılıkları olmaması gerekmektedir. Bu sebeple bu katman için birim
+testlerimizi yazarken herhangi bir `mock` varlığa ihtiyaç duymamaktayız.
+
+Uygulama (application) katmanımız veri saklama ortamı gibi dış sistemlerle iletişime geçilme kararının alındığı yerdir.
+Birim testlerinin ağ (network), dosya sistemi (file system) gibi bileşenlerle iletişime geçmemesi gerekmektedir. Bu
+sebeple bu katmanın testini hazırlarken dış sistemlerle iletişime geçtiğimiz işlemleri yöneten (Repository gibi)
+arayüzleri `Moq` kütüphanesi aracılığı ile sahte varlıklar ile oluşturuyoruz.
 
 [Integration Test with Docker](https://ademcatamak.medium.com/integration-test-with-net-core-and-docker-21b241f7372)
 will be implemented. After that, tests will be executed in pipeline
