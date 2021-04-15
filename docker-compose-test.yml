@@ -1,0 +1,23 @@
+version: "3.4"
+
+services:
+
+  basketmanagement-sql-server:
+    image: mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Passw0rd"
+    expose:
+      - 1433
+    ports:
+      - 31433:1433
+
+  basketmanagement-rabbit-mq:
+    image: rabbitmq:3.7-management
+    expose:
+      - 15672
+      - 5672
+    ports:
+      - 45672:5672
+      - 55672:15672
+
