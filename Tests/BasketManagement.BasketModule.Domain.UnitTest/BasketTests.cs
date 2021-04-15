@@ -26,7 +26,20 @@ namespace BasketManagement.BasketModule.Domain.UnitTest
             Assert.Equal(accountId, basket.AccountId);
             Assert.Empty(basket.BasketLines);
         }
-        
+
+        [Fact]
+        public void PutItemIntoBasket__WhenQuantityIsNotZero__BasketShouldContainProduct()
+        {
+            string accountId = Guid.NewGuid().ToString();
+            BasketItem basketItem = new BasketItem("productId", 2);
+
+            var basket = Basket.Create(accountId);
+            basket.PutItemIntoBasket(basketItem);
+
+            Assert.Single(basket.BasketLines);
+            Assert.Equal(2, basket.BasketLines.First().BasketItem.Quantity);
+        }
+
         [Fact]
         public void PutItemIntoBasket__WhenQuantityIsZero__BasketShouldNotContainsProduct()
         {
@@ -35,10 +48,10 @@ namespace BasketManagement.BasketModule.Domain.UnitTest
 
             var basket = Basket.Create(accountId);
             basket.PutItemIntoBasket(basketItem);
-            
+
             Assert.Empty(basket.BasketLines);
         }
-        
+
         [Fact]
         public void PutItemIntoBasket__WhenProductExistInBasket_And_ProductQuantitySetAsZero__BasketShouldNotContainsProduct()
         {
@@ -47,15 +60,15 @@ namespace BasketManagement.BasketModule.Domain.UnitTest
 
             var basket = Basket.Create(accountId);
             basket.PutItemIntoBasket(basketItem);
-            
-            Assert.Contains(basketItem, basket.BasketLines.Select(l=>l.BasketItem));
+
+            Assert.Contains(basketItem, basket.BasketLines.Select(l => l.BasketItem));
 
             BasketItem newBasketItem = new BasketItem(basketItem.ProductId, 0);
             basket.PutItemIntoBasket(newBasketItem);
-            
+
             Assert.Empty(basket.BasketLines);
         }
-        
+
         [Fact]
         public void PutItemIntoBasket__WhenProductExistInBasket_And_ProductQuantitySetAsNonzero__BasketItemQuantityShouldBeUpdated()
         {
@@ -64,13 +77,13 @@ namespace BasketManagement.BasketModule.Domain.UnitTest
 
             var basket = Basket.Create(accountId);
             basket.PutItemIntoBasket(basketItem);
-            
-            Assert.Contains(basketItem, basket.BasketLines.Select(l=>l.BasketItem));
+
+            Assert.Contains(basketItem, basket.BasketLines.Select(l => l.BasketItem));
 
             BasketItem newBasketItem = new BasketItem(basketItem.ProductId, 3);
             basket.PutItemIntoBasket(newBasketItem);
-            
-            Assert.Equal(3, basket.BasketLines.First(l=>l.BasketItem.ProductId == "productId").BasketItem.Quantity);
+
+            Assert.Equal(3, basket.BasketLines.First(l => l.BasketItem.ProductId == "productId").BasketItem.Quantity);
         }
     }
 }
