@@ -18,9 +18,9 @@ var ProjectsToBePublished  = new Project[]
 };
 
 var TestProjectPatterns = new string[]{
-  "./**/FunctionalTest*.csproj",
-  "./**/IntegrationTest*.csproj",
-  "./**/UnitTest*.csproj",
+  "./**/*FunctionalTest*.csproj",
+  "./**/*IntegrationTest*.csproj",
+  "./**/*UnitTest*.csproj",
 };
 
 var BuildConfig = "Release";

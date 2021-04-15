@@ -62,7 +62,7 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
         }
 
         [HttpPut("accounts/{accountId}/baskets/{basketId}")]
-        [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
         public async Task<IActionResult> PutItemIntoBasket([FromRoute] string accountId, [FromRoute] Guid basketId, [FromBody] BasketItemHttpModel basketItemHttpModel)
         {
             BasketItem basketItem = new BasketItem(basketItemHttpModel?.ProductId ?? string.Empty, basketItemHttpModel?.Quantity ?? 0);
@@ -83,7 +83,7 @@ namespace BasketManagement.WebApi.Modules.BasketModule.Controllers
 
             return StatusCode((int) HttpStatusCode.OK);
         }
-        
+
         [HttpDelete("accounts/{accountId}/baskets/{basketId}/basket-item/{productId}")]
         [ProducesResponseType(typeof(Guid), (int) HttpStatusCode.Created)]
         public async Task<IActionResult> DeleteBasketLine([FromRoute] string accountId, [FromRoute] Guid basketId, [FromRoute] string productId)

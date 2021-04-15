@@ -5,6 +5,6 @@ namespace BasketManagement.WebApi.Modules
 {
     public class MassTransitConsumerAssembly : IIntegrationMessageConsumerAssembly
     {
-        public Assembly Assembly => this.GetType().Assembly;
+        public Assembly Assembly => GetType().Assembly;
     }
 }

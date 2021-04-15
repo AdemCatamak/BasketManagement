@@ -5,6 +5,6 @@ namespace BasketManagement.BasketModule.Infrastructure.Db.EntityConfigurations
 {
     public class BasketModuleTypeConfigurationAssembly : IEntityTypeConfigurationAssembly
     {
-        public Assembly Assembly => this.GetType().Assembly;
+        public Assembly Assembly => GetType().Assembly;
     }
 }
