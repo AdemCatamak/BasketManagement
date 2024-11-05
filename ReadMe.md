@@ -1,126 +1,69 @@
 # Basket Management ![.github/workflows/github.yml](https://github.com/AdemCatamak/BasketManagement/workflows/.github/workflows/github.yml/badge.svg?branch=master)
 
-## __Çalıştırma__
+ReadMe dosyasının Türkçe haline [bu link](./ReadMe_tr.md) aracılığıyla ulaşabilirsiniz.
 
-Ana dizinde yer alan _docker-compose_ dosyası kullanılarak uygulama çalıştırılabilir ve localhost:5000 üzerinden hizmet
-alınabilir.
+## __Running the Application__
 
-Not: _docker-compose_ aracılığı ile uygulama çalıştırılmak ve test edilmek istenirse 5000 portunun başka bir uygulama
-tarafından kullanılmaması gerekmektedir.
+You can run the application using the _docker-compose_ file located in the root directory, and it will be available at localhost:5000.
 
-Bir IDE aracılığı ile debug yapmak isterseniz de ```docker-compose -f docker-compose-test.yml up``` komutu ile
-uygulamanın ihtiyaç duyacağı SqlServer ve RabbitMQ bileşenlerini bir konteyner içerisinde oluşturabilirsiniz. Ayrıca
-debug modda uygulamayı çalıştırabilmeniz için bilgisayarınızda
-[DotNet 5](https://dotnet.microsoft.com/download/dotnet/5.0)  yüklü olmalıdır.
+Note: If you wish to run and test the application with _docker-compose_, make sure that port 5000 is not being used by any other application.
 
-Not: ```docker-compose-test.yml``` ile gereken bağımlılıkların çalıştırılabilmesi için `31433, 45672, 55672` portlarının
-kullanılmıyor olması gerekmektedir.
+If you want to debug via an IDE, you can create the SqlServer and RabbitMQ components that the application will need in a container with the command ```docker-compose -f docker-compose-test.yml up```. Also, to run the application in debug mode, [DotNet 5](https://dotnet.microsoft.com/download/dotnet/5.0) must be installed on your computer.
 
-## __Geliştirme Sırasında Kullanılan Teknikler__
+Note: In order to run the required dependencies with ```docker-compose-test.yml```, ports `31433, 45672, 55672` must not be used.
 
-Bu
-proje [Olaya Dayalı Programlama](https://ademcatamak.medium.com/olaya-dayal%C4%B1-programlama-event-driven-programming-d6b7e2c0d948)
-tekniğiyle oluşturulmuştur. Yazımda bahsetmiş olduğum gibi bu şekilde projeler olabildiğince düşük bağımlılıkla
-tasarlanabilmektedir. Bu şekilde kod yeni özellikler eklenmesi noktasında daha esnek olmaktadır.
+## __Techniques Used During Development__
 
-Projede yer alan katmanlar DDD konseptine göre
-oluşturulmuştur. [DDD Projelerindeki Katmanlar](https://ademcatamak.medium.com/layers-in-ddd-projects-bd492aa2b8aa)
-yazım aracılığı ile hangi sorumluluğa sahip sınıfları hangi katmanlara koyduğuma dair gerekçelere erişeiblirsiniz.
+This project was created with the [Event-Driven Programming](https://ademcatamak.medium.com/olaya-dayal%C4%B1-programlama-event-driven-programming-d6b7e2c0d948) technique. As I mentioned in my article, projects can be designed with as few dependencies as possible. In this way, the code is more flexible in terms of adding new features.
 
-Kullanıcıların uygulamamız ile etkileşime geçtiği BasketManagement.WebApi kısmında REST mimarisine bağlı kalmaya özen
-gösterdim. REST mimarisine göre bir web servis tasarlarken dikkat
-ettiğim [REST Mimarisinin 5 Kuralına](https://ademcatamak.medium.com/5-rules-of-rest-architecture-434abaf5db44)
-bu link üzerinden erişebilirsiniz.
+The layers in the project were created according to the DDD principles. You can access the  justifications for which classes with which responsibilities I put in which layers through the article [Layers in DDD Projects](https://ademcatamak.medium.com/layers-in-ddd-projects-bd492aa2b8aa).
 
-Veri saklama ortamından verileri talep ederken specification tasarım deseninden yararlandım. Bu şekilde kritelerin
-tekrar tekrar kullanılması ve birleştirilmesi daha kolay
-olmaktadır. [Specification Tasarım Deseninin](https://ademcatamak.medium.com/specification-design-pattern-c814649be0ef)
-avantajlarına ve C# dilinde nasıl implemente ettiğime dair bilgilere link aracılığı ile erişebilirsiniz.
+I tried to obey to the REST architecture in the BasketManagement.WebApi section where users interact with our application. You can access the [5 Rules of REST Architecture](https://ademcatamak.medium.com/5-rules-of-rest-architecture-434abaf5db44) that I pay attention to when designing a web service according to the REST architecture via this link.
 
-Farklı okuma ve yazma modellerine ihtiyaç duyduğum ve yazma üzerinde kilit işleminin okuma işlemini etkilemesini
-istemediğim için
-[CQRS Deseninden](https://ademcatamak.medium.com/cqrs-command-query-responsibility-segregation-476d2d81225a)
-yararlandım. Bu desenin örnek uygulaması ve açıklamaları için ise
-[CQRS ile Stok Yönetimi](https://ademcatamak.medium.com/stok-y%C3%B6netimi-cqrs-%C3%B6rne%C4%9Fi-c8243b82c7b2) yazıma
-göz atabilirsiniz.
+I used the specification design pattern when requesting data from the data storage medium. In this way, it is easier to reuse and combine criteria. You can access the advantages of [Specification Design Pattern](https://ademcatamak.medium.com/specification-design-pattern-c814649be0ef) and information about how I implemented it in C# via the link.
 
-RabbitMQ mesaj brokerına mesajlar
-gönderilirken [Outbox Tasarım Deseni](https://ademcatamak.medium.com/outbox-design-pattern-57e1519ed5e4) kullanılmıştır.
-Böylece sistemde oluşan değişimlere ait mesajların RabbitMQ üzerine gönderilmesi eylemi aynı Transaction Scope içerisine
-alınmıştır. Bir diğer deyişle sistemde oluşan değişiklikler daha sonra RabbitMQ sistemine iletilmek üzere kaydedilmiş ve
-mesaj kaybının yaşanmayacağı garanti altına alınmıştır.
+Since I needed different read and write models and did not want the lock operation on the write to affect the read operation, I used the [CQRS Pattern](https://ademcatamak.medium.com/cqrs-command-query-responsibility-segregation-476d2d81225a). For sample implementation and explanations of this pattern, you can check out my article [Stock Management with CQRS](https://ademcatamak.medium.com/stok-y%C3%B6netimi-cqrs-%C3%B6rne%C4%9Fi-c8243b82c7b2).
+
+When sending messages to the RabbitMQ message broker, the [Outbox Design Pattern](https://ademcatamak.medium.com/outbox-design-pattern-57e1519ed5e4) was used. Thus, the action of sending messages regarding changes in the system to RabbitMQ was included in the same Transaction Scope. In other words, changes in the system were recorded to be transmitted to the RabbitMQ system later, and it was guaranteed that no message loss would occur.
 
 ### __Stock__
 
-Bu modul ürünlere ait stok verisini yönetmektedir. StockAction adındaki veri tabanı tablosunda ürün stoğu üzerinde
-yapılan tüm değişiklikler saklanmaktadır. Bu eylemler aynı Transaction Scope içerisinde StockSnapshot adındaki tabloya
-yansıtılmaktadır. StockSnapshot bir ürüne ait kullanılabilir değeri saklamaktadır. Bu değerin negatif değere dönmesi
-durumunda yeterli stok olmadığına dair hata oluşturulacaktır. Bu durumda da veri tabanı işlemleri Rollback edilecektir.
-Rollback sayesinde de StockSnapshot tablosuna yazılan veriler kayıt edilmemiş olacaktır.
+This module manages the stock data of the products. All changes made to the product stock are stored in the database table called StockAction. These actions are reflected in the table called StockSnapshot within the same Transaction Scope. StockSnapshot stores the usable value of a product. If this value becomes negative, an error will be generated indicating that there is not enough stock. In this case, the database transactions will be Rollbacked. Thanks to Rollback, the data written to the StockSnapshot table will not be recorded.
 
-StockSnapshot üzerinde oluşan değişikler Stock adındaki tabloya asenkron olarak yansıtılmaktadır. Bu şekilde okuma ve
-yazma modelleri ayrıştırılmıştır. StockAction modeli ile stok üzerinde yapılmak istenen değişiklikler için emirler
-sisteme aktarılırken Stock modeli ile okuma ihtiyaçları karşılanmaktadır.
+The changes made on StockSnapshot are reflected asynchronously to the table named Stock. In this way, reading and writing models are separated. While the orders for the changes to be made on the stock are transferred to the system with the StockAction model, reading needs are met with the Stock model.
 
-BasketManagement projesinde konudan çok uzaklaşmamak için WebApi üzerinden stok üzerinde aksiyon alınabilmesini
-sağlayacak endpointlere yer vermedim. Bu endpointlere ihtiyaç duyacağım durumda daha önce PoC olarak hazırlamış olduğum
-[CQRS ile Stok Yönetimi](https://ademcatamak.medium.com/stok-y%C3%B6netimi-cqrs-%C3%B6rne%C4%9Fi-c8243b82c7b2) yazıma ve
-örnek projeye erişebilirsiniz.
+In order not to stray too far from the topic in the BasketManagement project, I did not include endpoints that would allow actions to be taken on the stock via WebApi. In case you need these endpoints, you can access the article I previously prepared as a PoC [Stock Management with CQRS](https://ademcatamak.medium.com/stok-y%C3%B6netimi-cqrs-%C3%B6rne%C4%9Fi-c8243b82c7b2) and the sample project.
 
 ### __Basket__
 
-Uygulamanın kolayca kullanılıp test edilebilmesi için authentication işlemleri implemente edilmemiştir. Bu sebeple test
-yapan kişi istediği `AccountId` değerini kullanabilmektedir. Normal şartlar altında bu değer kontrol edilmeli ve talebi
-gönderen kişinin istekte bahsi geçen `AccountId` için işlemleri yürütüp yürütemeyeceği kontrol edilmelidir.
+Authentication operations are not implemented to ensure that the application can be easily used and tested. For this reason, the tester can use any `AccountId` value he/she wants. Under normal conditions, this value should be checked and it should be checked whether the person sending the request can execute operations for the `AccountId` mentioned in the request.
 
 #### __POST accounts/{accountId/}baskets__
 
-Kullanıcıyı işaret edecek bir değer talep etmektedir. Her bir talepte kullanıcı için yeni bir sepet oluşturulmaktadır.
+It requests a value that will indicate the user. A new basket is created for the user with each request.
 
 #### __GET accounts/{accountId/}baskets__
 
-Kullanıcıyı işaret edecek bir değer talep etmektedir. Bu kullanıcıya ait sepetleri ve sepetin içeriklerini cevap olarak
-dönmektedir. Opsiyonel olarak `BasketId` değeri verilerek kullanıya ait özel bir sepet bilgisi de elde edilebilmektedir.
-Kriterlere uygun bir sepet bulunamaması durumunda kullanıcı talebine 4XX seviyesinden yanıt dönülecektir.
+It requests a value that will indicate the user. It returns the baskets and the contents of the basket belonging to this user as a response. Optionally, a special basket information belonging to the user can be obtained by giving the `BasketId` value. If a basket that meets the criteria is not found, a response will be returned to the user request at 4XX level.
 
 #### __PUT accounts/{accountId/}baskets/{basketId}__
 
-İstek gövdesinden sepette yer alınması istenen ürün ve adet değeri bilgileri girilmektedir. Ürün sepette yoksa
-eklenecektir. Eğer ürün sepette varsa adet değeri güncellenecektir. Sepetin bulunamaması durumunda kullanıcıya isteğin
-hatalı olduğuna dair bilgi verilecektir.
+The product and quantity value information to be included in the basket are entered in the request body. If the product is not in the basket, it will be added. If the product is in the basket, the quantity value will be updated. If the basket cannot be found, the user will be informed that the request is incorrect.
 
-Not: Adet değerinin 0 girilmesi ürünün sepetten çıkarılmasına eş değerdir.
+Note: Entering 0 for the quantity value is equivalent to removing the product from the cart.
 
 #### __DELETE accounts/{accountId/}baskets/{basketId}/products/{productId}__
 
-Kullanıcıya ait sepet bilgisi aranacaktır. Eğer sepet bilgisi bulunursa bahsi geçen ürünün sepette olup olmadığı kontrol
-edilecektir. Sepette ürünün bulunması halinde ürün sepetten çıkarılacaktır. Sepetin veya ürünün bulunamaması durumunda
-hata kullanıcıya yansıtılacaktır.
+The user's cart information will be searched. If the cart information is found, it will be checked whether the mentioned product is in the cart. If the product is in the cart, the product will be removed from the cart. If the cart or product cannot be found, the error will be reflected to the user.
 
 #### __DELETE accounts/{accountId/}baskets/{basketId}__
 
-Kullanıya ait sepet bilgisi aranacaktır. Eğer sepet bilgisi bulunursa bahsi geçen sepetteki tüm ürünler sepetten
-çıkarılacak ardından sepet silinecektir. Sepetin bulunamaması durumunda hata kullanıcıya yansıtılacaktır.
+The user's cart information will be searched. If the cart information is found, all products in the mentioned cart will be removed from the cart and then the cart will be deleted. If the cart cannot be found, the error will be reflected to the user.
 
 ## Test
 
-Projenin tamamı birim veya entegrasyon testi ile test edilmemiştir. Bunun yerine birim testi ve entegrasyon testi
-ihtiyacının nasıl karşılanabileceğine dair örnek teşkil etmesi için domain ve application katmanlarının bir kısmını
-kapsayacak şekilde testler yazılmıştır.
+The entire project was not tested with unit or integration testing. Instead, tests were written to cover part of the domain and application layers to provide an example of how the need for unit and integration testing could be met.
 
-DDD konseptine göre domain katmanının dış bağımlılıkları olmaması gerekmektedir. Bu sebeple bu katman için birim
-testlerimizi yazarken herhangi bir `mock` varlığa ihtiyaç duymamaktayız.
+The application layer is where decisions are made about communicating with external systems such as data storage. Unit tests should not communicate with components such as the network and file system. For this reason, I used the `Moq` library when preparing my tests for this layer. Thanks to the `Moq` library, I was able to create interfaces that communicate with external systems from fake objects that would behave as I wanted.
 
-Uygulama (application) katmanı veri saklama ortamı gibi dış sistemlerle iletişime geçilme kararının alındığı yerdir.
-Birim testlerinin ağ (network) ve dosya sistemi (file system) gibi bileşenlerle iletişime geçmemesi gerekmektedir. Bu
-sebeple bu katman için testlerimi hazırlarken `Moq` kütüphanesinden yararlandım. `Moq` kütüphanesi sayesinde dış
-sistemlerle iletişime geçen arayüzleri, istediğim gibi davranacak sahte objelerden oluşturabildim.
-
-Dış bağımlılıkların docker aracılığı ile oluşturulması ile entegrasyon testleri de yazılmıştır. Dış bağımlılıkların
-docker aracılığı ile yönetilmesi sayesinde entegrasyon testleri için ortamların yaratılıp yok edilmesi işlemi CI iş
-hattında kolaylıkla yapılabilmektedir. Bunun için test konteynerleri kullanılmıştır. Bu geliştirmenin implementasyonu
-için
-[Docker ile Entegrasyon Testi](https://ademcatamak.medium.com/integration-test-with-net-core-and-docker-21b241f7372)
-yazısına göz atabilirsiniz. CI iş hattının oluşturulmasını da yine kod seviyesinde bulabilirsiniz. Bunun
-için  [Cake Build](https://ademcatamak.medium.com/cake-build-nedir-684eb1885b06)
-aracı kullanılmıştır.
+Integration tests were also written by creating external dependencies via docker. Thanks to the management of external dependencies via docker, the creation and destruction of environments for integration tests can be easily done in the CI pipeline. Test containers were used for this. For the implementation of this development, you can take a look at the article [Integration Test with Docker](https://ademcatamak.medium.com/integration-test-with-net-core-and-docker-21b241f7372). You can also find the creation of the CI pipeline at the code level. For this, the [Cake Build](https://ademcatamak.medium.com/cake-build-nedir-684eb1885b06) tool was used.
